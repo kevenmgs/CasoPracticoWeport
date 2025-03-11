@@ -7,6 +7,7 @@ import QRCode from "react-qr-code";
 
 export default function ViewInformation() {
   const [user, setUser] = useState(false);
+  const [fullUrl, setFullUrl] = useState(""); 
   const router = useRouter();
   const pathname = usePathname();
 
@@ -19,6 +20,12 @@ export default function ViewInformation() {
       router.replace("/auth/information");
     }
   }, [user]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setFullUrl(`${window.location.origin}${pathname}`);
+    }
+  }, [pathname]);
 
 
   return (
@@ -46,7 +53,7 @@ export default function ViewInformation() {
 
         <div className="relative border-2 border-blue-500 rounded-md min-h-20 bg-blue-500">
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 w-36 h-36 bg-white border-2 border-blue-500 rounded-full flex items-center justify-center">
-            <QRCode value={pathname} size={90} />
+            <QRCode value={fullUrl} size={90} />
           </div>
 
           <div className="absolute top-52 left-1/2 transform -translate-x-1/2 bg-white rounded-md shadow-2xl min-w-1/2 sm:min-w-2/3  grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 p-4">
