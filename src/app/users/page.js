@@ -18,7 +18,7 @@ export default function Users() {
     if (token === null) {
       router.replace("/404");
     }
-  }, [token]); 
+  }, [token]);
 
   useEffect(() => {
     if (!token) return;
@@ -35,7 +35,7 @@ export default function Users() {
       .catch((error) => {
         console.error("error", error);
       });
-  }, [token]); 
+  }, [token]);
 
   return (
     <>
@@ -76,22 +76,30 @@ export default function Users() {
             </tr>
           </thead>
           <tbody className="w-full">
-            {users.map((user) => (
-              <tr key={user.id} className="text-center">
-                <td className="px-4 py-3 text-center">{user.id}</td>
-                <td className="px-4 py-3 text-center">{user.name}</td>
-                <td className="px-4 py-3 text-center">{user.last_name}</td>
-                <td className="px-4 py-3 text-center">{user.email}</td>
-                <td className="px-4 py-3 text-center">{user.phone}</td>
-                <td className="px-4 py-3 text-center">{user.address}</td>
-                <td className="px-4 py-3 text-center">
-                  {user.name_contac_emerg}
-                </td>
-                <td className="px-4 py-3 text-center">
-                  {user.phone_contac_emerg}
+            {users.length === 1 ? (
+              <tr>
+                <td colSpan="8" className="text-center">
+                  Aún no hay empleados registrados
                 </td>
               </tr>
-            ))}
+            ) : (
+              users.map((user) => (
+                <tr key={user.id} className="text-center">
+                  <td className="px-4 py-3 text-center">{user.id}</td>
+                  <td className="px-4 py-3 text-center">{user.name}</td>
+                  <td className="px-4 py-3 text-center">{user.last_name}</td>
+                  <td className="px-4 py-3 text-center">{user.email}</td>
+                  <td className="px-4 py-3 text-center">{user.phone}</td>
+                  <td className="px-4 py-3 text-center">{user.address}</td>
+                  <td className="px-4 py-3 text-center">
+                    {user.name_contac_emerg}
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    {user.phone_contac_emerg}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
