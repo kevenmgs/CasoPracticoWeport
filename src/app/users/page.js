@@ -2,30 +2,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function Users() {
-  const [token, setToken] = useState(false);
   const [users, setUsers] = useState([]);
-  const router = useRouter();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    setToken(storedToken);
-  }, []);
-
-  useEffect(() => {
-    if (token === null) {
-      router.replace("/404");
-    }
-  }, [token]);
-
-  useEffect(() => {
-    if (!token) return;
     axios
       .get("http://localhost:8000/api/users", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          // Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
@@ -35,13 +20,14 @@ export default function Users() {
       .catch((error) => {
         console.error("error", error);
       });
-  }, [token]);
+  }, []);
 
   return (
     <>
       <div className="flex justify-end items-center  ">
         <Link href="/auth/register">
-          <button className="bg-blue-500 hover:bg-blue-600 text-white text-tertiary font-bold py-2 px-4 rounded">
+          <button className="bg-gray-900 hover:bg-gray-800 text-white text-tertiary font-bold py-2 px-4 rounded"
+          >
             Crear Usuario
           </button>
         </Link>
@@ -49,7 +35,8 @@ export default function Users() {
       <div className="w-full relative overflow-x-auto my-2">
         <table className="w-full whitespace-nowrap">
           <thead>
-            <tr className="bg-blue-500 text-tertiary rounded-t-md text-white">
+            <tr className="bg-gray-900 text-tertiary rounded-t-md text-white font-bold"
+            >
               <th className="px-4 py-2 text-center text-sm truncate rounded-tl-lg">
                 ID
               </th>

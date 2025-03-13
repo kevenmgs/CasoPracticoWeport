@@ -5,16 +5,15 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import worport from "../../../../public/imgs/weport.png";
 import Image from "next/image";
+import Swal from "sweetalert2";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
 
     let formData = {
       email: email,
@@ -29,15 +28,29 @@ export default function Login() {
         password,
       });
 
-      console.log("response", response);
+      console.log('response', response.data.message);
 
       if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Inicio de sesión exitoso",
+          text: response.data.message,
+          confirmButtonColor: "#3B82F6",
+          confirmButtonText: "Aceptar",
+        });
+
         localStorage.setItem("token", response.data.access_token);
         localStorage.setItem("id_user", JSON.stringify(response.data.id_user));
         router.push("/users");
       }
     } catch (error) {
-      setError("Credenciales incorrectas", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error?.response?.data?.detail || "No se pudo iniciar sesión",
+        confirmButtonColor: "#3B82F6",
+        confirmButtonText: "Aceptar",
+      });
     }
   };
 
@@ -57,7 +70,6 @@ export default function Login() {
             Iniciar Sesión
           </h2>
 
-          {error && <p className="text-red-500 text-center">{error}</p>}
 
           <div className="mb-4 flex items-center">
             <svg

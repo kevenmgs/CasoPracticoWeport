@@ -1,20 +1,20 @@
-"use client";
 
+import { redirect } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import weport from "../../../../../public/imgs/weport.png";
+import { useState } from "react";
 import Img from "next/image";
+import weport from "../../../../../public/imgs/weport.png";
+import { usePathname } from "next/navigation";
 
 export default function Sidebar({ children }) {
-  const [id, setId] = useState(null);
+  const id = typeof window !== "undefined" ? localStorage.getItem("id_user") : false;
+
+  if (!id) {
+    redirect('/404'); 
+  }
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();
-  console.log("pathname", pathname);
-
-  useEffect(() => {
-    setId(localStorage.getItem("id_user"));
-  }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -26,7 +26,7 @@ export default function Sidebar({ children }) {
         onClick={toggleSidebar}
         aria-controls="separator-sidebar"
         type="button"
-        className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-900 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
       >
         <svg
           className="w-6 h-6"
@@ -41,12 +41,10 @@ export default function Sidebar({ children }) {
 
       <aside
         id="separator-sidebar"
-        className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } sm:translate-x-0`}
+        className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} sm:translate-x-0`}
         aria-label="Sidebar"
       >
-        <div className="h-full px-3 py-4 overflow-y-auto bg-gray-100 dark:bg-gray-800">
+        <div className="h-full px-3 py-4 overflow-y-auto bg-blue-500 dark:bg-gray-800">
           <div className="flex justify-center items-center">
             <Img
               src={weport}
@@ -59,16 +57,14 @@ export default function Sidebar({ children }) {
 
           <button
             onClick={toggleSidebar}
-            className={`fixed top-5 left-52 z-50l bg-transparent bg-opacity-50 ${
-              isSidebarOpen ? "block" : "hidden"
-            } sm:hidden`}
+            className={`fixed top-5 left-52 z-50 bg-transparent bg-opacity-50 ${isSidebarOpen ? "block" : "hidden"} sm:hidden`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth="1.5"
-              className="size-6 text-blue-500" 
+              className="size-6 text-white font-bold"
             >
               <path
                 stroke="currentColor"
@@ -85,9 +81,7 @@ export default function Sidebar({ children }) {
               <Link
                 href={`/users/${id}`}
                 className={`flex items-center p-2 rounded-lg group ${
-                  pathname === `/users/${id}`
-                    ? "bg-blue-500 text-white"
-                    : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                  pathname === `/users/${id}` ? "bg-white text-gray-900" : "text-white dark:text-white hover:bg-white hover:text-gray-900"
                 }`}
               >
                 <svg
@@ -101,9 +95,7 @@ export default function Sidebar({ children }) {
                     d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
                   />
                 </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">
-                  Mi información
-                </span>
+                <span className="flex-1 ms-3 whitespace-nowrap">Mi información</span>
               </Link>
             </li>
 
@@ -112,9 +104,7 @@ export default function Sidebar({ children }) {
               <Link
                 href="/users"
                 className={`flex items-center p-2 rounded-lg group ${
-                  pathname === "/users"
-                    ? "bg-blue-500 text-white"
-                    : "text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                  pathname === "/users" ? "bg-white text-gray-900" : "text-white dark:text-white hover:bg-white hover:text-gray-900"
                 }`}
               >
                 <svg
@@ -140,12 +130,12 @@ export default function Sidebar({ children }) {
                   localStorage.removeItem("id_user");
                   window.location.href = "/";
                 }}
-                className="flex w-full text-start p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className="flex w-full text-start p-2 text-white rounded-lg dark:text-white hover:bg-white hover:text-gray-900 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 22 22"
-                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  className="flex-shrink-0 w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-gray-900 dark:group-hover:text-white"
                 >
                   <path
                     fill="none"
@@ -153,9 +143,7 @@ export default function Sidebar({ children }) {
                     d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0l-3-3m0 0l3-3m-3 3H15"
                   />
                 </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">
-                  Cerrar sesión
-                </span>
+                <span className="flex-1 ms-3 whitespace-nowrap">Cerrar sesión</span>
               </button>
             </li>
           </ul>
