@@ -4,6 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 export default function Information() {
   const [formData, setFormData] = useState({
@@ -16,23 +17,39 @@ export default function Information() {
     setFormData({ ...formData, [name]: value });
   };
 
-  console.log("formData", formData.email);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/user_email/${formData.email}`
+      const encodedEmail = encodeURIComponent(formData.email); // Codificar email para evitar problemas en la URL
+      const response = await axios.post(
+        `http://localhost:8000/api/user_email/${encodedEmail}`
       );
 
       console.log("response", response);
-
-      if (response.status === 200) {
+  
+      if (response?.data?.id !== null) {
+        Swal.fire({
+          icon: "success",
+          title: response.data.message,
+          showConfirmButton: false,
+          confirmButtonColor: "#3B82F6",
+          confirmButtonText: "Aceptar",
+        });
+  
         localStorage.setItem("informationUser", JSON.stringify(response.data));
         router.push("/auth/information/view");
+      }else{
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: response.data.message,
+          confirmButtonColor: "#3B82F6",
+          confirmButtonText: "Aceptar",
+        });
       }
     } catch (error) {
-      alert("Error al validar el usuario", error);
+      console.error("Error al obtener datos del usuario", error);
     }
   };
 
@@ -69,7 +86,6 @@ export default function Information() {
           >
             Ver información
           </button>
-          
         </form>
       </div>
     </div>
